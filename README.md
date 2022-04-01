@@ -12,6 +12,7 @@ Dentro da pasta da solução, contém um arquivo _appsettings.example.json_, que
 # Estrutura do Banco de Dados
 O banco de dados é relativamente simples, contendo apenas algumas entidades e a tabela de migrações criada pelo framework (que, intencionalmente, não aparecerá no diagrama).
 ![MER do Banco de Dados](https://user-images.githubusercontent.com/67481026/161175997-2ddaaa1c-74be-45bd-9ca0-ebc72d239ae2.png)
+
 Modelo construído utilizando as ferramentas nativas do MySQL Workbench
 
 # Futuras Implementações
