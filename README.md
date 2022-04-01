@@ -6,7 +6,7 @@ API de cinemas e filmes criada no curso da Alura de .NETs, na formação ASP.NET
 ## Documentação
 Os endpoints podem ser facilmente visualizados e consultados utilizando a URL que os exibe tratados no formato do Swagger.
 
-# Configuraçãod
+# Configuração
 Dentro da pasta da solução, contém um arquivo _appsettings.example.json_, que pode ser utilizado para definir as string de conexão, sendo a principal para MySQL. Ao remover o sufixo ".example", o arquivo não será considerado pelo git, pois ficará com suas configurações pessoais.
 
 # Estrutura do Banco de Dados
