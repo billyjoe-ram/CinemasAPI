@@ -24,9 +24,7 @@ namespace CinemasAPI.Controllers
         [HttpPost]
         public ActionResult AddFilme([FromBody] CreateFilmeDto filmeDto)
         {
-            Filme filme = new Filme(filmeDto.Titulo, filmeDto.Diretor, filmeDto.DuracaoEmMinutos);
-
-            filme.ClassificacaoEtaria = filmeDto.ClassificacaoEtaria;
+            Filme filme = _mapper.Map<Filme>(filmeDto);
 
             _context.Filmes.Add(filme);
 
@@ -34,7 +32,7 @@ namespace CinemasAPI.Controllers
 
             return CreatedAtAction(
                 nameof(FetchFilme),
-                new { Id = filme.Id },
+                new { IdFilme = filme.Id },
                 filme
             );
         }
@@ -55,7 +53,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet("{idFilme}")]
-        public ActionResult<ReadFilmeDto> FetchFilme(string idFilme)
+        public ActionResult<ReadFilmeDto> FetchFilme(int idFilme)
         {
             var filme = FetchFilmePorId(idFilme);
 
@@ -70,7 +68,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpPut("{idFilme}")]
-        public IActionResult UpdateFilme(string idFilme, [FromBody] UpdateFilmeDto filmeNovoDto)
+        public IActionResult UpdateFilme(int idFilme, [FromBody] UpdateFilmeDto filmeNovoDto)
         {
             var filme = FetchFilmePorId(idFilme);
 
@@ -86,7 +84,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpDelete("{idFilme}")]
-        public IActionResult DeleteFilme(string idFilme)
+        public IActionResult DeleteFilme(int idFilme)
         {
             var filme = FetchFilmePorId(idFilme);
 
@@ -100,10 +98,10 @@ namespace CinemasAPI.Controllers
             return NoContent();
         }
 
-        private Filme FetchFilmePorId(string idFilme)
+        private Filme FetchFilmePorId(int idFilme)
         {
             var filmeQuery = from f in _context.Filmes
-                        where f.Id.ToString() == idFilme
+                        where f.Id == idFilme
                         select f;
 
             return filmeQuery.FirstOrDefault();

@@ -10,7 +10,7 @@ namespace CinemasAPI.Data.Dtos.Filme
         public string Diretor { get; set; }
 
         public int DuracaoEmMinutos { get; set; }
-        public int ClassificacaoEtaria { get; set; }
         public string Genero { get; set; }
+        public int ClassificacaoEtaria { get; set; }
     }
 }

@@ -13,6 +13,7 @@ namespace CinemasAPI.Data.Dtos.Filme
         [Required(ErrorMessage = "Duração do Filme é obrigatória")]
         [Range(1, 600)]
         public int DuracaoEmMinutos { get; set; }
+        public string Genero { get; set; }
         public int ClassificacaoEtaria { get; set; }
     }
 }
