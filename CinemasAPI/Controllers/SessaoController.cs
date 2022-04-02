@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-
-using CinemasAPI.Data;
-using CinemasAPI.Models;
+﻿using CinemasAPI.Services;
+using CinemasAPI.Exceptions;
 using CinemasAPI.Data.Dtos.Sessao;
 
 using Microsoft.AspNetCore.Mvc;
@@ -12,22 +10,17 @@ namespace CinemasAPI.Controllers
     [Route("[controller]")]
     public class SessaoController : ControllerBase
     {
-        private AppDbContext _context;
-        private IMapper _mapper;
+        private SessaoService _sessaoService;
 
-        public SessaoController(AppDbContext context, IMapper mapper)
+        public SessaoController(SessaoService sessaoService)
         {
-            _context = context;
-            _mapper = mapper;
+            _sessaoService = sessaoService;
         }
 
         [HttpPost]
         public IActionResult AddSessao([FromBody] CreateSessaoDto sessaoDto)
         {
-            Sessao sessao = _mapper.Map<Sessao>(sessaoDto);
-
-            _context.Sessoes.Add(sessao);
-            _context.SaveChanges();
+            ReadSessaoDto sessao = _sessaoService.AddSessao(sessaoDto);
 
             return CreatedAtAction(
                 nameof(FetchSessao),
@@ -37,41 +30,50 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Sessao>> FetchSessoes()
+        public ActionResult<IEnumerable<ReadSessaoDto>> FetchSessoes()
         {
-            var sessoes = _context.Sessoes.Select(s => _mapper.Map<ReadSessaoDto>(s));
+            IEnumerable<ReadSessaoDto> sessoes;
+
+            try
+            {
+                sessoes = _sessaoService.FetchSessoes();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
 
             return Ok(sessoes);
         }
 
         [HttpGet("{idSessao}")]
-        public ActionResult<Sessao> FetchSessao(string idSessao)
+        public ActionResult<ReadSessaoDto> FetchSessao(string idSessao)
         {
-            var sessao = FetchSessaoPorId(idSessao);
+            ReadSessaoDto sessao;
 
-            if (sessao == null)
+            try
+            {
+                sessao = _sessaoService.FetchSessao(idSessao);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
 
-            ReadSessaoDto sessaoDto = _mapper.Map<ReadSessaoDto>(sessao);
-
-            return Ok(sessaoDto);
+            return Ok(sessao);
         }
 
         [HttpPut("{idSessao}")]
         public IActionResult UpdateSessao(string idSessao, [FromBody] UpdateSessaoDto sessaoNovaDto)
         {
-            var sessao = FetchSessaoPorId(idSessao);
-
-            if (sessao == null)
+            try
+            {
+                _sessaoService.UpdateSessao(idSessao, sessaoNovaDto);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
-
-            _mapper.Map(sessaoNovaDto, sessao);
-
-            _context.SaveChanges();
 
             return NoContent();
         }
@@ -79,26 +81,16 @@ namespace CinemasAPI.Controllers
         [HttpDelete("{idSessao}")]
         public IActionResult DeleteSessao(string idSessao)
         {
-            var sessao = FetchSessaoPorId(idSessao);
-
-            if (sessao == null)
+            try
+            {
+                _sessaoService.DeleteSessao(idSessao);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
 
-            _context.Remove(sessao);
-            _context.SaveChanges();
-
             return NoContent();
-        }
-
-        private Sessao FetchSessaoPorId(string idSessao)
-        {
-            var sessaoQuery = from s in _context.Sessoes
-                              where s.Id.ToString() == idSessao
-                              select s;
-
-            return sessaoQuery.FirstOrDefault();
         }
     }
 }
