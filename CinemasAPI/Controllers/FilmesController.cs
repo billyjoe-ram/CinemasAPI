@@ -1,8 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-
-using CinemasAPI.Services;
-using CinemasAPI.Data.Dtos.Filme;
+﻿using CinemasAPI.Services;
 using CinemasAPI.Exceptions;
+using CinemasAPI.Data.Dtos.Filme;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace CinemasAPI.Controllers
 {
