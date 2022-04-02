@@ -27,7 +27,7 @@ namespace CinemasAPI.Services
             return _mapper.Map<ReadCinemaDto>(cinema);
         }
 
-        public ReadCinemaDto FetchCinema(string idCinema)
+        public ReadCinemaDto FetchCinema(int idCinema)
         {
             var cinema = FetchCinemasPorId(idCinema);
 
@@ -41,7 +41,7 @@ namespace CinemasAPI.Services
             return cinemaDto;
         }
 
-        public void UpdateCinema(string idCinema, UpdateCinemaDto cinemaNovoDto)
+        public void UpdateCinema(int idCinema, UpdateCinemaDto cinemaNovoDto)
         {
             var cinema = FetchCinemasPorId(idCinema);
 
@@ -55,7 +55,7 @@ namespace CinemasAPI.Services
             _context.SaveChanges();
         }
 
-        public void DeleteCinema(string idCinema)
+        public void DeleteCinema(int idCinema)
         {
             var cinema = FetchCinemasPorId(idCinema);
 
@@ -68,10 +68,10 @@ namespace CinemasAPI.Services
             _context.SaveChanges();
         }
 
-        private Cinema FetchCinemasPorId(string idCinema)
+        private Cinema FetchCinemasPorId(int idCinema)
         {
             var cinemaQuery = from c in _context.Cinemas
-                              where c.Id.ToString() == idCinema
+                              where c.Id == idCinema
                               select c;
 
             return cinemaQuery.FirstOrDefault();

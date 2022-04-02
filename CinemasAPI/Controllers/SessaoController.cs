@@ -47,7 +47,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet("{idSessao}")]
-        public ActionResult<ReadSessaoDto> FetchSessao(string idSessao)
+        public ActionResult<ReadSessaoDto> FetchSessao(int idSessao)
         {
             ReadSessaoDto sessao;
 
@@ -64,7 +64,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpPut("{idSessao}")]
-        public IActionResult UpdateSessao(string idSessao, [FromBody] UpdateSessaoDto sessaoNovaDto)
+        public IActionResult UpdateSessao(int idSessao, [FromBody] UpdateSessaoDto sessaoNovaDto)
         {
             try
             {
@@ -79,7 +79,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpDelete("{idSessao}")]
-        public IActionResult DeleteSessao(string idSessao)
+        public IActionResult DeleteSessao(int idSessao)
         {
             try
             {

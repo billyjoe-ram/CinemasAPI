@@ -35,7 +35,7 @@ namespace CinemasAPI.Services
             return sessoes;
         }
 
-        public ReadSessaoDto FetchSessao(string idSessao)
+        public ReadSessaoDto FetchSessao(int idSessao)
         {
             Sessao sessao = FetchSessaoPorId(idSessao);
 
@@ -49,7 +49,7 @@ namespace CinemasAPI.Services
             return sessaoDto;
         }
 
-        public void UpdateSessao(string idSessao, UpdateSessaoDto sessaoNovaDto)
+        public void UpdateSessao(int idSessao, UpdateSessaoDto sessaoNovaDto)
         {
             var sessao = FetchSessaoPorId(idSessao);
 
@@ -63,7 +63,7 @@ namespace CinemasAPI.Services
             _context.SaveChanges();
         }
 
-        public void DeleteSessao(string idSessao)
+        public void DeleteSessao(int idSessao)
         {
             Sessao sessao = FetchSessaoPorId(idSessao);
 
@@ -76,10 +76,10 @@ namespace CinemasAPI.Services
             _context.SaveChanges();
         }
 
-        private Sessao FetchSessaoPorId(string idSessao)
+        private Sessao FetchSessaoPorId(int idSessao)
         {
             var sessaoQuery = from s in _context.Sessoes
-                              where s.Id.ToString() == idSessao
+                              where s.Id == idSessao
                               select s;
 
             return sessaoQuery.FirstOrDefault();
