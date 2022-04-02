@@ -3,6 +3,8 @@ using Microsoft.AspNetCore.Mvc;
 using CinemasAPI.Data;
 using CinemasAPI.Data.Dtos.Endereco;
 using CinemasAPI.Models;
+using CinemasAPI.Services;
+using CinemasAPI.Exceptions;
 
 namespace CinemasAPI.Controllers
 {
@@ -10,22 +12,17 @@ namespace CinemasAPI.Controllers
     [Route("[controller]")]
     public class EnderecosController : ControllerBase
     {
-        private AppDbContext _context;
-        private IMapper _mapper;
+        private EnderecosService _enderecosService;
 
-        public EnderecosController(AppDbContext context, IMapper mapper)
+        public EnderecosController(EnderecosService enderecosService)
         {
-            _context = context;
-            _mapper = mapper;
+            _enderecosService = enderecosService;
         }
 
         [HttpPost]
         public IActionResult AddEndereco([FromBody] CreateEnderecoDto enderecoDto)
         {
-            Endereco endereco = _mapper.Map<Endereco>(enderecoDto);
-
-            _context.Enderecos.Add(endereco);
-            _context.SaveChanges();
+            ReadEnderecoDto endereco = _enderecosService.AddEndereco(enderecoDto);
 
             return CreatedAtAction(
                 nameof(FetchEndereco),
@@ -35,68 +32,67 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Endereco>> FetchEnderecos()
+        public ActionResult<IEnumerable<ReadEnderecoDto>> FetchEnderecos()
         {
-            var enderecos = _context.Enderecos.Select(e => _mapper.Map<ReadEnderecoDto>(e));
+            IEnumerable<ReadEnderecoDto> enderecos;
+
+            try
+            {
+                enderecos = _enderecosService.FetchEnderecos();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
 
             return Ok(enderecos);
         }
 
         [HttpGet("{idEndereco}")]
-        public ActionResult<Endereco> FetchEndereco(string idEndereco)
+        public ActionResult<ReadEnderecoDto> FetchEndereco(int idEndereco)
         {
-            var endereco = FetchEnderecosPorId(idEndereco);
+            ReadEnderecoDto endereco;
 
-            if (endereco == null)
+            try
+            {
+                endereco = _enderecosService.FetchEndereco(idEndereco);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
-
-            ReadEnderecoDto enderecoDto = _mapper.Map<ReadEnderecoDto>(endereco);
-
-            return Ok(enderecoDto);
+            
+            return Ok(endereco);
         }
 
         [HttpPut("{idEndereco}")]
-        public IActionResult UpdateEndereco(string idEndereco, [FromBody] UpdateEnderecoDto enderecoNovoDto)
+        public IActionResult UpdateEndereco(int idEndereco, [FromBody] UpdateEnderecoDto enderecoNovoDto)
         {
-            var endereco = FetchEnderecosPorId(idEndereco);
-
-            if (endereco == null)
+            try
+            {
+                _enderecosService.UpdateEndereco(idEndereco, enderecoNovoDto);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
-
-            _mapper.Map(enderecoNovoDto, endereco);
-
-            _context.SaveChanges();
 
             return NoContent();
         }
 
         [HttpDelete("{idEndereco}")]
-        public IActionResult DeleteEndereco(string idEndereco)
+        public IActionResult DeleteEndereco(int idEndereco)
         {
-            var endereco = FetchEnderecosPorId(idEndereco);
-
-            if (endereco == null)
+            try
+            {
+                _enderecosService.DeleteEndereco(idEndereco);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
 
-            _context.Remove(endereco);
-            _context.SaveChanges();
-
             return NoContent();
-        }
-
-        private Endereco FetchEnderecosPorId(string idEndereco)
-        {
-            var enderecoQuery = from e in _context.Enderecos
-                              where e.Id.ToString() == idEndereco
-                              select e;
-
-            return enderecoQuery.FirstOrDefault();
         }
     }
 }
