@@ -32,9 +32,13 @@ namespace CinemasAPI.Controllers
         [HttpGet]
         public ActionResult<IEnumerable<ReadFilmeDto>> FetchFilmes([FromQuery] int classificacaoEtaria = 18)
         {
-            var filmes = _filmesService.FetchFilme(classificacaoEtaria);
+            IEnumerable<ReadFilmeDto> filmes;
 
-            if (filmes == null)
+            try
+            {
+                filmes = _filmesService.FetchFilmes(classificacaoEtaria);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
