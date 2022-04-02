@@ -1,10 +1,8 @@
-﻿using AutoMapper;
-using Microsoft.AspNetCore.Mvc;
-using CinemasAPI.Data;
-using CinemasAPI.Data.Dtos.Endereco;
-using CinemasAPI.Models;
-using CinemasAPI.Services;
+﻿using CinemasAPI.Services;
 using CinemasAPI.Exceptions;
+using CinemasAPI.Data.Dtos.Endereco;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace CinemasAPI.Controllers
 {
