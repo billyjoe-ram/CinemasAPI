@@ -1,7 +1,5 @@
-﻿using AutoMapper;
-
-using CinemasAPI.Data;
-using CinemasAPI.Models;
+﻿using CinemasAPI.Services;
+using CinemasAPI.Exceptions;
 using CinemasAPI.Data.Dtos.Gerente;
 
 using Microsoft.AspNetCore.Mvc;
@@ -12,22 +10,17 @@ namespace CinemasAPI.Controllers
     [Route("[controller]")]
     public class GerentesController : ControllerBase
     {
-        private AppDbContext _context;
-        private IMapper _mapper;
+        private GerentesService _gerentesService;
 
-        public GerentesController(AppDbContext context, IMapper mapper)
+        public GerentesController(GerentesService gerenteService)
         {
-            _context = context;
-            _mapper = mapper;
+            _gerentesService = gerenteService;
         }
 
         [HttpPost]
         public IActionResult AddGerente([FromBody] CreateGerenteDto gerenteDto)
         {
-            Gerente gerente = _mapper.Map<Gerente>(gerenteDto);
-
-            _context.Gerentes.Add(gerente);
-            _context.SaveChanges();
+            ReadGerenteDto gerente = _gerentesService.AddGerente(gerenteDto);
 
             return CreatedAtAction(
                 nameof(FetchGerente),
@@ -37,68 +30,67 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Gerente>> Fefe()
+        public ActionResult<IEnumerable<ReadGerenteDto>> FetchGerentes()
         {
-            var gerentes = _context.Gerentes.Select(g => _mapper.Map<ReadGerenteDto>(g));
+            IEnumerable<ReadGerenteDto> gerentes;
+
+            try
+            {
+                gerentes = _gerentesService.FetchGerentes();
+            }
+            catch (NotFoundException)
+            {
+                return NotFound();
+            }
 
             return Ok(gerentes);
         }
 
         [HttpGet("{idGerente}")]
-        public ActionResult<Gerente> FetchGerente(string idGerente)
+        public ActionResult<ReadGerenteDto> FetchGerente(int idGerente)
         {
-            var gerente = FetchGerentePorId(idGerente);
+            ReadGerenteDto gerente;
 
-            if (gerente == null)
+            try
+            {
+                gerente = _gerentesService.FetchGerente(idGerente);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
 
-            ReadGerenteDto gerenteDto = _mapper.Map<ReadGerenteDto>(gerente);
-
-            return Ok(gerenteDto);
+            return Ok(gerente);
         }
 
         [HttpPut("{idGerente}")]
-        public IActionResult UpdateGerente(string idGerente, [FromBody] UpdateGerenteDto gerenteNovoDto)
+        public IActionResult UpdateGerente(int idGerente, [FromBody] UpdateGerenteDto gerenteNovoDto)
         {
-            var gerente = FetchGerentePorId(idGerente);
-
-            if (gerente == null)
+            try
+            {
+                _gerentesService.UpdateGerente(idGerente, gerenteNovoDto);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
-
-            _mapper.Map(gerenteNovoDto, gerente);
-
-            _context.SaveChanges();
 
             return NoContent();
         }
 
         [HttpDelete("{idGerente}")]
-        public IActionResult DeleteGerente(string idGerente)
+        public IActionResult DeleteGerente(int idGerente)
         {
-            var gerente = FetchGerentePorId(idGerente);
-
-            if (gerente == null)
+            try
+            {
+                _gerentesService.DeleteGerente(idGerente);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
 
-            _context.Remove(gerente);
-            _context.SaveChanges();
-
             return NoContent();
-        }
-
-        private Gerente FetchGerentePorId(string idGerente)
-        {
-            var gerenteQuery = from g in _context.Gerentes
-                              where g.Id.ToString() == idGerente
-                              select g;
-
-            return gerenteQuery.FirstOrDefault();
         }
     }
 }
