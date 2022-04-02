@@ -1,8 +1,9 @@
 ﻿using AutoMapper;
+
 using CinemasAPI.Data;
-using CinemasAPI.Data.Dtos.Endereco;
-using CinemasAPI.Exceptions;
 using CinemasAPI.Models;
+using CinemasAPI.Exceptions;
+using CinemasAPI.Data.Dtos.Endereco;
 
 namespace CinemasAPI.Services
 {

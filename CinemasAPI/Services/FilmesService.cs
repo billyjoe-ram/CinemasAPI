@@ -2,8 +2,8 @@
 
 using CinemasAPI.Data;
 using CinemasAPI.Models;
-using CinemasAPI.Data.Dtos.Filme;
 using CinemasAPI.Exceptions;
+using CinemasAPI.Data.Dtos.Filme;
 
 namespace CinemasAPI.Services
 {
