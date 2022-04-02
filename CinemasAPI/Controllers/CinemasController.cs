@@ -32,9 +32,13 @@ namespace CinemasAPI.Controllers
         [HttpGet("{idCinema}")]
         public ActionResult<ReadCinemaDto> FetchCinema(string idCinema)
         {
-            var cinema = _cinemasService.FetchCinema(idCinema);
+            ReadCinemaDto cinema;
 
-            if (cinema == null)
+            try
+            {
+                cinema = _cinemasService.FetchCinema(idCinema);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }

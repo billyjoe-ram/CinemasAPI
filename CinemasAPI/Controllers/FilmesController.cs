@@ -45,9 +45,13 @@ namespace CinemasAPI.Controllers
         [HttpGet("{idFilme}")]
         public ActionResult<ReadFilmeDto> FetchFilme(int idFilme)
         {
-            var filme = _filmesService.FetchFilme(idFilme);
+            ReadFilmeDto filme;
 
-            if (filme == null)
+            try
+            {
+                filme = _filmesService.FetchFilme(idFilme);
+            }
+            catch (NotFoundException)
             {
                 return NotFound();
             }
