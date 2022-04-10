@@ -1,11 +1,12 @@
-﻿using AutoMapper;
+﻿using System.Web;
+using AutoMapper;
 
 using UsuariosAPI.Models;
 using UsuariosAPI.Exceptions;
 using UsuariosAPI.Data.Dtos;
+using UsuariosAPI.Data.Request;
 
 using Microsoft.AspNetCore.Identity;
-using UsuariosAPI.Data.Request;
 
 namespace UsuariosAPI.Services
 {
@@ -39,18 +40,31 @@ namespace UsuariosAPI.Services
                 throw new RegisterException($"Erro ao cadastrar usuário:\n{mensagemDeErro}");
             }
 
-            var resultadoIdentityCodigo = _userManager.GenerateEmailConfirmationTokenAsync(usuarioIdentity);
+            var resultadoIdentityCodigo = _userManager
+                .GenerateEmailConfirmationTokenAsync(usuarioIdentity);
 
             if (!resultadoIdentityCodigo.IsCompletedSuccessfully)
             {
                 throw new RegisterException($"Erro ao gerar código de Confirmação Por E-mail");
             }
 
-
             string code = resultadoIdentityCodigo.Result;
-            EnviarEmailConfirmacao(usuarioIdentity, code);
+            var encodedIdentityCodigo = HttpUtility.UrlEncode(resultadoIdentityCodigo.Result);
+            EnviarEmailConfirmacao(usuarioIdentity, encodedIdentityCodigo);
 
             return code;
+        }
+
+        private void EnviarEmailConfirmacao(IdentityUser<int> usuarioIdentity, string tokenAtivacao)
+        {
+            string destinatario = usuarioIdentity.Email;
+            string assunto = "Link para ativação de conta";
+
+            string corpoEmail = $"Olá {usuarioIdentity.UserName}!\n\n";
+            corpoEmail += "Aqui seu link para ativação de conta no CinemasAPI.\n";
+            corpoEmail += $"https://localhost:7099/usuarios/ativar?UsuarioId={usuarioIdentity.Id}&CodigoAtivacao ={tokenAtivacao}";
+
+            _emailService.EnviarEmail(destinatario, assunto, corpoEmail);
         }
 
         public void AtivarUsuario(AtivaContaRequest ativaContaRequest)
@@ -61,22 +75,10 @@ namespace UsuariosAPI.Services
 
             var identityResult = _userManager.ConfirmEmailAsync(identityUser, ativaContaRequest.CodigoAtivacao);
 
-            if (!identityResult.Result.Succeeded) { 
+            if (!identityResult.Result.Succeeded)
+            {
                 throw new ActiveAccountByEmailException();
             }
-        }
-
-        private void EnviarEmailConfirmacao(IdentityUser<int> usuarioIdentity, string tokenAtivacao)
-        {
-            string destinatario = usuarioIdentity.Email;
-            string assunto = "Código de ativação";
-
-            string corpoEmail = $"Olá {usuarioIdentity.UserName}!\n\n";
-            corpoEmail += "Aqui está seu código de ativação para o CinemasAPI. ";
-            corpoEmail += $"Envie seu id ({usuarioIdentity.Id}) e o token \"{tokenAtivacao}\" ";
-            corpoEmail += "para http://localhost:5099/usuarios/ativar e sua conta ficará ativa!";
-
-            _emailService.EnviarEmail(destinatario, assunto, corpoEmail);
         }
 
     }

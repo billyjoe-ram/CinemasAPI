@@ -1,6 +1,7 @@
 ﻿using UsuariosAPI.Services;
-using Microsoft.AspNetCore.Mvc;
 using UsuariosAPI.Data.Request;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace UsuariosAPI.Controllers
 {

@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using UsuariosAPI.Services;
+﻿using UsuariosAPI.Services;
+
+using Microsoft.AspNetCore.Mvc;
 
 namespace UsuariosAPI.Controllers
 {

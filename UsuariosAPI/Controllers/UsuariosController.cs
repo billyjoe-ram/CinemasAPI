@@ -1,8 +1,8 @@
 ﻿using UsuariosAPI.Services;
 using UsuariosAPI.Data.Dtos;
+using UsuariosAPI.Data.Request;
 
 using Microsoft.AspNetCore.Mvc;
-using UsuariosAPI.Data.Request;
 
 namespace UsuariosAPI.Controllers
 {
@@ -32,9 +32,9 @@ namespace UsuariosAPI.Controllers
             return Ok(new { CodigoAtivacao = codigoAtivacao });
         }
 
-        [HttpPost]
+        [HttpGet]
         [Route("/[controller]/ativar")]
-        public IActionResult AtivarUsuario(AtivaContaRequest ativaContaRequest)
+        public IActionResult AtivarUsuario([FromQuery] AtivaContaRequest ativaContaRequest)
         {
             try
             {

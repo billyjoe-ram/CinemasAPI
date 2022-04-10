@@ -2,7 +2,6 @@
 using UsuariosAPI.Data.Request;
 
 using Microsoft.AspNetCore.Identity;
-using UsuariosAPI.Models;
 
 namespace UsuariosAPI.Services
 {
