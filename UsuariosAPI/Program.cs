@@ -21,9 +21,13 @@ builder.Services.AddDbContext<UserDbContext>(
     )
 );
 
-builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(
-    options => options.SignIn.RequireConfirmedEmail = true
-    )
+builder.Services.AddIdentity<IdentityUser<int>, IdentityRole<int>>(options =>
+    {
+        options.SignIn.RequireConfirmedEmail = true;
+
+        options.Lockout.MaxFailedAccessAttempts = 8;
+        options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromHours(16);
+    })
     .AddEntityFrameworkStores<UserDbContext>()
     .AddDefaultTokenProviders();
 builder.Services.AddScoped<UsuariosService, UsuariosService>();
