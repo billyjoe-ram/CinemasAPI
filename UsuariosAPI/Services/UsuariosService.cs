@@ -28,6 +28,18 @@ namespace UsuariosAPI.Services
 
         public string CadastrarUsuario(CreateUsuarioDto usuarioDto)
         {
+            IdentityUser<int> usuarioIdentity = CriarUsuario(usuarioDto);
+
+            string codigoConfirmacaoEmail = GerarCodigoConfirmacaoEmail(usuarioIdentity);
+            var encodedCodigoConfirmacao = HttpUtility.UrlEncode(codigoConfirmacaoEmail);
+
+            EnviarEmailConfirmacao(usuarioIdentity, encodedCodigoConfirmacao);
+
+            return codigoConfirmacaoEmail;
+        }
+
+        private IdentityUser<int> CriarUsuario(CreateUsuarioDto usuarioDto)
+        {
             Usuario usuario = _mapper.Map<Usuario>(usuarioDto);
             IdentityUser<int> usuarioIdentity = _mapper.Map<IdentityUser<int>>(usuario);
 
@@ -41,12 +53,7 @@ namespace UsuariosAPI.Services
                 throw new RegisterException($"Erro ao cadastrar usuário:\n{mensagemDeErro}");
             }
 
-            string codigoConfirmacaoEmail = GerarCodigoConfirmacaoEmail(usuarioIdentity);
-            var encodedCodigoConfirmacao = HttpUtility.UrlEncode(codigoConfirmacaoEmail);
-
-            EnviarEmailConfirmacao(usuarioIdentity, encodedCodigoConfirmacao);
-
-            return codigoConfirmacaoEmail;
+            return usuarioIdentity;
         }
 
         private string GerarCodigoConfirmacaoEmail(IdentityUser<int> usuarioIdentity)
