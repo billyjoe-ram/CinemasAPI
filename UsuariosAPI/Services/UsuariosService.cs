@@ -81,5 +81,53 @@ namespace UsuariosAPI.Services
             }
         }
 
+        public string SolicitarResetSenha(SolicitacaoResetSenhaRequest resetSenhaRequest)
+        {
+            IdentityUser<int> identityUser = GetUsuarioIdentityPorEmail(resetSenhaRequest.Email);
+
+            Task<string> passwordResetTokenTask = _userManager.GeneratePasswordResetTokenAsync(identityUser);
+
+            if (!passwordResetTokenTask.IsCompletedSuccessfully)
+            {
+                string mensagemExcecao = "Ocorreu um erro ao solicitar redefinição de senha";
+
+                if (passwordResetTokenTask.Exception != null)
+                {
+                    mensagemExcecao = passwordResetTokenTask.Exception.Message;
+                }
+                throw new Exception(mensagemExcecao);
+            }
+
+            string passwordResetToken = passwordResetTokenTask.Result;
+
+            return passwordResetToken;
+        }
+
+        public void ResetarSenha(ResetSenhaRequest request)
+        {
+            IdentityUser<int> identityUser = GetUsuarioIdentityPorEmail(request.Email);
+
+            var identityResult = _userManager.ResetPasswordAsync(identityUser, request.ResetSenhaToken, request.ConfirmaSenha).Result;
+
+            if (!identityResult.Succeeded)
+            {
+                throw new Exception($"Não foi possível redefinir a senha");
+            }
+        }
+
+        private IdentityUser<int> GetUsuarioIdentityPorEmail(string email)
+        {
+            var identityUser = _userManager
+                .Users
+                .FirstOrDefault(u => u.NormalizedEmail == email.ToUpper());
+
+            if (identityUser == null)
+            {
+                throw new NotFoundException("Usuario não encontrado");
+            }
+
+            return identityUser;
+        }
+
     }
 }

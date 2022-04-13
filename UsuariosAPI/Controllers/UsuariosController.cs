@@ -46,5 +46,39 @@ namespace UsuariosAPI.Controllers
             }
             return Ok(new { Mensagem = "Conta ativada com sucesso"});
         }
+
+        [HttpPost]
+        [Route("/[controller]/solicitar-reset-senha")]
+        public IActionResult SolicitarResetSenha([FromBody] SolicitacaoResetSenhaRequest request)
+        {
+            string tokenResetSenha;
+
+            try
+            {
+                tokenResetSenha = _usuariosService.SolicitarResetSenha(request);
+            }
+            catch (Exception e)
+            {
+                return Unauthorized(e.Message);
+            }
+
+            return Ok(new { Token = tokenResetSenha });
+        }
+
+        [HttpPost]
+        [Route("/[controller]/reset-senha")]
+        public IActionResult ResetarSenha([FromBody] ResetSenhaRequest request)
+        {
+            try
+            {
+                _usuariosService.ResetarSenha(request);
+            }
+            catch (Exception e)
+            {
+                return Unauthorized(e.Message);
+            }
+
+            return Ok(new { Mensagem = "Senha redefinida com sucesso" });
+        }
     }
 }
