@@ -30,6 +30,7 @@ Modelo construído utilizando as ferramentas nativas do MySQL Workbench
 
 # Futuras Implementações
 - [ ] Documentar as classes e métodos;
+- [ ] Tornar métodos assíncronos onde for necessário;
 - [ ] Modificar classes para internas onde for necessário;
 - [ ] Alterar o banco de dados para que gêneros de filme seja uma entidade à parte com um relacionamento n:n com filmes;
 - [ ] Alterar ids das chaves primárias de inteiros com autoincrement para uuid ou identificações mais aleatórias e únicas;
