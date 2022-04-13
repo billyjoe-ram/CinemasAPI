@@ -31,7 +31,8 @@ namespace UsuariosAPI.Services
             Usuario usuario = _mapper.Map<Usuario>(usuarioDto);
             IdentityUser<int> usuarioIdentity = _mapper.Map<IdentityUser<int>>(usuario);
 
-            Task<IdentityResult> resultadoIdentity = _userManager.CreateAsync(usuarioIdentity, usuarioDto.Senha);
+            Task<IdentityResult> resultadoIdentity = _userManager
+                .CreateAsync(usuarioIdentity, usuarioDto.Senha);
 
             if (!resultadoIdentity.Result.Succeeded)
             {
@@ -40,19 +41,27 @@ namespace UsuariosAPI.Services
                 throw new RegisterException($"Erro ao cadastrar usuário:\n{mensagemDeErro}");
             }
 
-            var resultadoIdentityCodigo = _userManager
+            string codigoConfirmacaoEmail = GerarCodigoConfirmacaoEmail(usuarioIdentity);
+            var encodedCodigoConfirmacao = HttpUtility.UrlEncode(codigoConfirmacaoEmail);
+
+            EnviarEmailConfirmacao(usuarioIdentity, encodedCodigoConfirmacao);
+
+            return codigoConfirmacaoEmail;
+        }
+
+        private string GerarCodigoConfirmacaoEmail(IdentityUser<int> usuarioIdentity)
+        {
+            var taskCodigo = _userManager
                 .GenerateEmailConfirmationTokenAsync(usuarioIdentity);
 
-            if (!resultadoIdentityCodigo.IsCompletedSuccessfully)
+            string codigoConfirmacao = taskCodigo.Result;
+
+            if (taskCodigo.IsCompleted && !taskCodigo.IsCompletedSuccessfully)
             {
                 throw new RegisterException($"Erro ao gerar código de Confirmação Por E-mail");
             }
 
-            string code = resultadoIdentityCodigo.Result;
-            var encodedIdentityCodigo = HttpUtility.UrlEncode(resultadoIdentityCodigo.Result);
-            EnviarEmailConfirmacao(usuarioIdentity, encodedIdentityCodigo);
-
-            return code;
+            return codigoConfirmacao;
         }
 
         private void EnviarEmailConfirmacao(IdentityUser<int> usuarioIdentity, string tokenAtivacao)
@@ -73,7 +82,8 @@ namespace UsuariosAPI.Services
                 .Users
                 .First(u => u.Id == ativaContaRequest.UsuarioId);
 
-            var identityResult = _userManager.ConfirmEmailAsync(identityUser, ativaContaRequest.CodigoAtivacao);
+            var identityResult = _userManager
+                .ConfirmEmailAsync(identityUser, ativaContaRequest.CodigoAtivacao);
 
             if (!identityResult.Result.Succeeded)
             {
