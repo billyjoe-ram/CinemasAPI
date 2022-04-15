@@ -3,6 +3,7 @@ using CinemasAPI.Exceptions;
 using CinemasAPI.Data.Dtos.Cinema;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemasAPI.Controllers
 {
@@ -18,6 +19,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult AddCinema([FromBody] CreateCinemaDto cinemaDto)
         {
             ReadCinemaDto cinema = _cinemasService.AddCinema(cinemaDto);
@@ -47,6 +49,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpPut("{idCinema}")]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateCinema(int idCinema, [FromBody] UpdateCinemaDto cinemaNovoDto)
         {
             try
@@ -62,6 +65,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpDelete("{idCinema}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteCinema(int idCinema)
         {
             try

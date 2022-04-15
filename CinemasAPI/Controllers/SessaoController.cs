@@ -3,6 +3,7 @@ using CinemasAPI.Exceptions;
 using CinemasAPI.Data.Dtos.Sessao;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemasAPI.Controllers
 {
@@ -18,6 +19,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult AddSessao([FromBody] CreateSessaoDto sessaoDto)
         {
             ReadSessaoDto sessao = _sessaoService.AddSessao(sessaoDto);
@@ -47,6 +49,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet("{idSessao}")]
+        [Authorize(Roles = "admin")]
         public ActionResult<ReadSessaoDto> FetchSessao(int idSessao)
         {
             ReadSessaoDto sessao;
@@ -64,6 +67,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpPut("{idSessao}")]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateSessao(int idSessao, [FromBody] UpdateSessaoDto sessaoNovaDto)
         {
             try
@@ -79,6 +83,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpDelete("{idSessao}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteSessao(int idSessao)
         {
             try

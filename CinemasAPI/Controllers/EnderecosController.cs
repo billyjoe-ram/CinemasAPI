@@ -3,6 +3,7 @@ using CinemasAPI.Exceptions;
 using CinemasAPI.Data.Dtos.Endereco;
 
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CinemasAPI.Controllers
 {
@@ -18,6 +19,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpPost]
+        [Authorize(Roles = "admin")]
         public IActionResult AddEndereco([FromBody] CreateEnderecoDto enderecoDto)
         {
             ReadEnderecoDto endereco = _enderecosService.AddEndereco(enderecoDto);
@@ -64,6 +66,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpPut("{idEndereco}")]
+        [Authorize(Roles = "admin")]
         public IActionResult UpdateEndereco(int idEndereco, [FromBody] UpdateEnderecoDto enderecoNovoDto)
         {
             try
@@ -79,6 +82,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpDelete("{idEndereco}")]
+        [Authorize(Roles = "admin")]
         public IActionResult DeleteEndereco(int idEndereco)
         {
             try
