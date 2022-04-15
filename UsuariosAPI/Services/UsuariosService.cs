@@ -15,20 +15,26 @@ namespace UsuariosAPI.Services
         private IMapper _mapper;
         private UserManager<IdentityUser<int>> _userManager;
         private EmailService _emailService;
+        private RoleManager<IdentityRole<int>> _roleManager;
+
         public UsuariosService(
             IMapper mapper,
             UserManager<IdentityUser<int>> userManager,
-            EmailService emailService
+            EmailService emailService,
+            RoleManager<IdentityRole<int>> roleManager
         )
         {
             _mapper = mapper;
             _userManager = userManager;
             _emailService = emailService;
+            _roleManager = roleManager;
         }
 
         public string CadastrarUsuario(CreateUsuarioDto usuarioDto)
         {
             IdentityUser<int> usuarioIdentity = CriarUsuario(usuarioDto);
+
+            AdicionarRoles(usuarioIdentity);
 
             string codigoConfirmacaoEmail = GerarCodigoConfirmacaoEmail(usuarioIdentity);
             var encodedCodigoConfirmacao = HttpUtility.UrlEncode(codigoConfirmacaoEmail);
@@ -54,6 +60,20 @@ namespace UsuariosAPI.Services
             }
 
             return usuarioIdentity;
+        }
+
+        private void AdicionarRoles(IdentityUser<int> usuarioIdentity)
+        {
+            var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("admin")).Result;
+
+            Task<IdentityResult> taskUsuarioRole = _userManager.AddToRoleAsync(usuarioIdentity, "admin");
+
+            IdentityResult identityResult = taskUsuarioRole.Result;
+
+            if (taskUsuarioRole.IsCompleted && !taskUsuarioRole.IsCompletedSuccessfully)
+            {
+                throw new RegisterException($"Erro ao adicionar roles");
+            }
         }
 
         private string GerarCodigoConfirmacaoEmail(IdentityUser<int> usuarioIdentity)

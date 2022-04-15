@@ -36,7 +36,12 @@ namespace UsuariosAPI.Services
                 throw new SignInException("Não foi possível realizar o login.");
             }
 
-            var token = _tokenService.CreateToken(identityUser);
+            var rolesUsuario = _signInManager.UserManager.GetRolesAsync(identityUser).Result.First();
+
+            var token = _tokenService.CreateUserToken(
+                identityUser,
+                rolesUsuario
+            );
 
             return token.Value;
         }
