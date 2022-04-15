@@ -1,6 +1,11 @@
-using Microsoft.EntityFrameworkCore;
 using CinemasAPI.Data;
 using CinemasAPI.Services;
+
+using System.Text;
+
+using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +26,26 @@ builder.Services.AddDbContext<AppDbContext>(
         connectionString, Microsoft.EntityFrameworkCore.ServerVersion.Parse("8.0.28-mysql")
     )
 );
+builder.Services.AddAuthentication(auth => {
+    auth.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    auth.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+})
+.AddJwtBearer(token =>
+{
+    token.RequireHttpsMetadata = true;
+    token.SaveToken = true;
+    token.TokenValidationParameters = new TokenValidationParameters()
+    {
+        ValidateIssuerSigningKey = true,
+        IssuerSigningKey = new SymmetricSecurityKey(
+            Encoding.UTF8.GetBytes("0asdjas09djsa09djasdjsadajsd09asjd09sajcnzxn")
+        ),
+        ValidateIssuer = false,
+        ValidateAudience = false,
+        ClockSkew = TimeSpan.Zero
+    };
+});
+
 builder.Services.AddScoped<CinemasService, CinemasService>();
 builder.Services.AddScoped<EnderecosService, EnderecosService>();
 builder.Services.AddScoped<FilmesService, FilmesService>();
@@ -37,6 +62,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+
+app.UseAuthentication();
 
 app.UseAuthorization();
 
