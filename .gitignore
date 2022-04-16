@@ -456,3 +456,6 @@ $RECYCLE.BIN/
 
 # Config files
 */appsettings.json
+
+# Database migrations
+UsuariosAPI/Migrations/*
