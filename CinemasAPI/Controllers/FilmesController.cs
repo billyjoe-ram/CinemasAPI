@@ -32,6 +32,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, user")]
         public ActionResult<IEnumerable<ReadFilmeDto>> FetchFilmes([FromQuery] int classificacaoEtaria = 18)
         {
             IEnumerable<ReadFilmeDto> filmes;
@@ -49,6 +50,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet("{idFilme}")]
+        [Authorize(Roles = "admin, user")]
         public ActionResult<ReadFilmeDto> FetchFilme(int idFilme)
         {
             ReadFilmeDto filme;

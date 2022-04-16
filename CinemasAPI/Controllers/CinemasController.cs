@@ -32,6 +32,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet("{idCinema}")]
+        [Authorize(Roles = "admin, user")]
         public ActionResult<ReadCinemaDto> FetchCinema(int idCinema)
         {
             ReadCinemaDto cinema;

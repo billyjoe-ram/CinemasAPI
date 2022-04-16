@@ -32,6 +32,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, user")]
         public ActionResult<IEnumerable<ReadSessaoDto>> FetchSessoes()
         {
             IEnumerable<ReadSessaoDto> sessoes;
@@ -49,7 +50,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet("{idSessao}")]
-        [Authorize(Roles = "admin")]
+        [Authorize(Roles = "admin, user")]
         public ActionResult<ReadSessaoDto> FetchSessao(int idSessao)
         {
             ReadSessaoDto sessao;

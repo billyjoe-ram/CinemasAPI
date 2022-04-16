@@ -32,6 +32,7 @@ namespace CinemasAPI.Controllers
         }
 
         [HttpGet]
+        [Authorize(Roles = "admin, user")]
         public ActionResult<IEnumerable<ReadEnderecoDto>> FetchEnderecos()
         {
             IEnumerable<ReadEnderecoDto> enderecos;
