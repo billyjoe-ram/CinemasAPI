@@ -6,29 +6,28 @@ namespace UsuariosAPI.Data
 {
     public class UserDbContext : IdentityDbContext<IdentityUser<int>, IdentityRole<int>, int>
     {
+        private IConfiguration _configuration;
 
         public UserDbContext(
-            DbContextOptions<UserDbContext> options
+            DbContextOptions<UserDbContext> options, 
+            IConfiguration configuration
         ) : base(options)
         {
+            _configuration = configuration;
         }
 
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
 
-            var configurations = new ConfigurationBuilder()
-                .SetBasePath(AppDomain.CurrentDomain.BaseDirectory)
-                .AddJsonFile("appsettings.json").Build();
-
             IdentityUser<int> admin = new IdentityUser<int>()
             {
-                UserName = configurations.GetValue<string>("DatabaseSettings:DefaultAdminName"),
-                NormalizedUserName = configurations
+                UserName = _configuration.GetValue<string>("DatabaseSettings:DefaultAdminName"),
+                NormalizedUserName = _configuration
                     .GetValue<string>("DatabaseSettings:DefaultAdminName")
                     .ToUpper(),
-                Email = configurations.GetValue<string>("DatabaseSettings:DefaulAdminMail"),
-                NormalizedEmail = configurations
+                Email = _configuration.GetValue<string>("DatabaseSettings:DefaulAdminMail"),
+                NormalizedEmail = _configuration
                     .GetValue<string>("DatabaseSettings:DefaulAdminMail")
                     .ToUpper(),
                 EmailConfirmed = true,
@@ -40,7 +39,7 @@ namespace UsuariosAPI.Data
 
             admin.PasswordHash = hasher.HashPassword(
                 admin,
-                configurations.GetValue<string>("DatabaseSettings:DefaultAdminPassword")
+                _configuration.GetValue<string>("DatabaseSettings:DefaultAdminPassword")
             );
 
 
@@ -48,6 +47,10 @@ namespace UsuariosAPI.Data
 
             builder.Entity<IdentityRole<int>>().HasData(
                 new IdentityRole<int> { Id = 1, Name = "admin", NormalizedName = "ADMIN" }
+            );
+
+            builder.Entity<IdentityRole<int>>().HasData(
+                new IdentityRole<int> { Id = 2, Name = "user", NormalizedName = "USER" }
             );
 
             builder.Entity<IdentityUserRole<int>>().HasData(

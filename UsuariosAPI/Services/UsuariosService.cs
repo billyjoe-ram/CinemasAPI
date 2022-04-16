@@ -64,9 +64,7 @@ namespace UsuariosAPI.Services
 
         private void AdicionarRoles(IdentityUser<int> usuarioIdentity)
         {
-            var createRoleResult = _roleManager.CreateAsync(new IdentityRole<int>("admin")).Result;
-
-            Task<IdentityResult> taskUsuarioRole = _userManager.AddToRoleAsync(usuarioIdentity, "admin");
+            Task<IdentityResult> taskUsuarioRole = _userManager.AddToRoleAsync(usuarioIdentity, "user");
 
             IdentityResult identityResult = taskUsuarioRole.Result;
 
