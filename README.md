@@ -10,9 +10,14 @@ Os endpoints podem ser facilmente visualizados e consultados utilizando a URL qu
 ## Banco de Dados
 Dentro da pasta da solução FilmesAPI, contém um arquivo *appsettings.example.json*, que pode ser utilizado para definir as string de conexão, sendo a principal para MySQL. Ao remover o sufixo ".example", o arquivo não será considerado pelo git, pois ficará com suas configurações pessoais.
 
-As credenciais para uso de banco de dados com a solução UsuariosAPI, podem ser as mesmas utilizados na FilmesAPI, mas com a base sendo *db_usuarios* ao invés de *db_filmes* por padrão.
+As credenciais para uso de banco de dados com o projeto UsuariosAPI, podem ser as mesmas utilizados na FilmesAPI, mas com a base sendo *db_usuarios* ao invés de *db_filmes* por padrão.
 
 Recomenda-se manter os bancos de dados separados e com a nomeação que vêm de configuração, mas fica a critério do utilizador da aplicação, não sendo um **critério** para funcionamento.
+
+Para o projeto escolhido, apenas utilize o Console do Gerenciador de Pacotes (em caso de utilizar o Visual Studio) e rode o comando `Update-Database`, ou entre no diretório do projeto e rode o comando `dotnet ef database update`.
+
+Como, para o projeto UsuariosAPI, algumas credenciais são necessárias e a equipe de desenvolvimento responsável não quis deixar valores padrão e previsíveis, também foram definidas strings de configuração para o usuário _default_ admin, que pode realizar todas as operações em todos os Endpoints da FilmesAPI.
+Antes de construir o banco de dados com o comando já citado, adicione essas credenciais no arquivo de configurações e crie o banco de dados com o comando `dotnet ef migrations add NomeDaMigracao` (ou Add-Migration NomeDaMigracao, para o caso de utilizar Visual Studio) e aí sim construa o banco de usuários.
 
 ## E-mail
 Para que o *client* de e-mail funcione corretamente na aplicação, também deve-se configurar suas credenciais para endereço e senha no nó "EmailSettings" do *appsettings.json*.
