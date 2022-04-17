@@ -112,7 +112,9 @@ namespace UsuariosAPI.Services
 
             if (!identityResult.Result.Succeeded)
             {
-                throw new ActiveAccountByEmailException();
+                List<string> erros = identityResult.Result.Errors.Select(e => e.Description).ToList();
+                string mensagemDeErro = String.Join("\n", erros);
+                throw new ActiveAccountByEmailException($"Erro ao ativar conta: {mensagemDeErro}");
             }
         }
 

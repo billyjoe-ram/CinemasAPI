@@ -40,9 +40,9 @@ namespace UsuariosAPI.Controllers
             {
                 _usuariosService.AtivarUsuario(ativaContaRequest);
             }
-            catch (Exception)
+            catch (Exception e)
             {
-                return BadRequest(new { Mensagem = "Não foi possível ativar a conta" });
+                return BadRequest(new { Mensagem = e.Message });
             }
             return Ok(new { Mensagem = "Conta ativada com sucesso"});
         }
@@ -59,7 +59,7 @@ namespace UsuariosAPI.Controllers
             }
             catch (Exception e)
             {
-                return Unauthorized(e.Message);
+                return Unauthorized(new { Mensagem = e.Message });
             }
 
             return Ok(new { Token = tokenResetSenha });
@@ -75,7 +75,7 @@ namespace UsuariosAPI.Controllers
             }
             catch (Exception e)
             {
-                return Unauthorized(e.Message);
+                return Unauthorized(new { Mensagem = e.Message });
             }
 
             return Ok(new { Mensagem = "Senha redefinida com sucesso" });
