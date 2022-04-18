@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Authorization;
 namespace CinemasAPI.Controllers
 {
     /// <summary>
-    ///     Controller para as operações relacionadas a endereços
+    ///     Controller para as operações relacionadas a filmes
     /// </summary>
     [ApiController]
     [Route("[controller]")]
@@ -17,7 +17,7 @@ namespace CinemasAPI.Controllers
         private FilmesService _filmesService;
 
         /// <summary>
-        ///     Inicia uma nova instância da classe <see cref="EnderecosController"/>.
+        ///     Inicia uma nova instância da classe <see cref="FilmesController"/>.
         /// </summary>
         /// <param name="filmesService"></param>
         public FilmesController(FilmesService filmesService)
