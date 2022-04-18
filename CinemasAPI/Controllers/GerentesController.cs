@@ -7,17 +7,29 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace CinemasAPI.Controllers
 {
+    /// <summary>
+    ///     Controller para as ações relacionadas a gerentes
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class GerentesController : ControllerBase
     {
         private GerentesService _gerentesService;
 
+        /// <summary>
+        ///     Inicia uma nova instância da classe <see cref="GerentesService"/>
+        /// </summary>
+        /// <param name="gerenteService"></param>
         public GerentesController(GerentesService gerenteService)
         {
             _gerentesService = gerenteService;
         }
 
+        /// <summary>
+        ///     Adiciona um Gerente aos registros.
+        /// </summary>
+        /// <param name="gerenteDto">Representa o DTO para criação de um Gerente.</param>
+        /// <returns>Resultado da ação realizada.</returns>
         [HttpPost]
         [Authorize(Roles = "admin")]
         public IActionResult AddGerente([FromBody] CreateGerenteDto gerenteDto)
@@ -31,6 +43,10 @@ namespace CinemasAPI.Controllers
             );
         }
 
+        /// <summary>
+        ///     Busca todos os Gerentes no banco de dados.
+        /// </summary>
+        /// <returns>Resultado da ação, com os Gerentes em JSON.</returns>
         [HttpGet]
         [Authorize(Roles = "admin, user")]
         public ActionResult<IEnumerable<ReadGerenteDto>> FetchGerentes()
@@ -49,6 +65,11 @@ namespace CinemasAPI.Controllers
             return Ok(gerentes);
         }
 
+        /// <summary>
+        ///     Busca um Gerente no banco de dados com o id passado.
+        /// </summary>
+        /// <param name="idGerente">O id respectivo do Gerente no banco de dados.</param>
+        /// <returns>Resultado da ação, com o Gerente em JSON.</returns>
         [HttpGet("{idGerente}")]
         [Authorize(Roles = "admin, user")]
         public ActionResult<ReadGerenteDto> FetchGerente(int idGerente)
@@ -67,6 +88,12 @@ namespace CinemasAPI.Controllers
             return Ok(gerente);
         }
 
+        /// <summary>
+        ///     Atualiza um Gerente no banco de dados com o id passado.
+        /// </summary>
+        /// <param name="idGerente">O id respectivo do Gerente a ser atualizado.</param>
+        /// <param name="gerenteNovoDto">O novo objeto, com os dados a serem alterados.</param>
+        /// <returns>Resultado da ação realizada</returns>
         [HttpPut("{idGerente}")]
         [Authorize(Roles = "admin")]
         public IActionResult UpdateGerente(int idGerente, [FromBody] UpdateGerenteDto gerenteNovoDto)
@@ -83,6 +110,12 @@ namespace CinemasAPI.Controllers
             return NoContent();
         }
 
+
+        /// <summary>
+        ///     Exclue um registro de Gerente no banco de dados.
+        /// </summary>
+        /// <param name="idGerente">O id do Gerente a ser excluído.</param>
+        /// <returns>Resultado da ação realizada.</returns>
         [HttpDelete("{idGerente}")]
         [Authorize(Roles = "admin")]
         public IActionResult DeleteGerente(int idGerente)
