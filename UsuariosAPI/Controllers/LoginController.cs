@@ -5,17 +5,29 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace UsuariosAPI.Controllers
 {
+    /// <summary>
+    ///     Controller para as ações relacionadas a login.
+    /// </summary>
     [ApiController]
     [Route("[controller]")]
     public class LoginController : ControllerBase
     {
         private LoginService _loginService;
 
+        /// <summary>
+        ///     Inicia uma nova instância da classe <see cref="LoginController"/>.
+        /// </summary>
+        /// <param name="loginService"></param>
         public LoginController(LoginService loginService)
         {
             _loginService = loginService;
         }
 
+        /// <summary>
+        ///     Loga um usuário no sistema.
+        /// </summary>
+        /// <param name="request">Classe de Request para efetuar o login.</param>
+        /// <returns>Resultado da ação realizada.</returns>
         [HttpPost]
         public IActionResult LogarUsuario(LoginRequest request)
         {
