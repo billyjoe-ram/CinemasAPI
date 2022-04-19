@@ -8,7 +8,7 @@ using CinemasAPI.Data.Dtos.Gerente;
 namespace CinemasAPI.Services
 {
     /// <summary>
-    /// 
+    ///     Service para as operações e regras de negócio relacionadas a Gerentes.
     /// </summary>
     public class GerentesService
     {
