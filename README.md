@@ -34,7 +34,7 @@ O banco de dados é relativamente simples, contendo apenas algumas entidades e a
 Modelo construído utilizando as ferramentas nativas do MySQL Workbench
 
 # Futuras Implementações
-- [ ] Documentar as classes e métodos;
+- [x] Documentar as classes e métodos;
 - [ ] Tornar métodos assíncronos onde for necessário;
 - [ ] Modificar classes para internas onde for necessário;
 - [ ] Alterar o banco de dados para que gêneros de filme seja uma entidade à parte com um relacionamento n:n com filmes;
