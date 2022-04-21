@@ -9,7 +9,7 @@ namespace UsuariosAPI.Services
     ///     Service para as operações e regras de negócio relacionadas aos
     ///     e-mails da UsuariosAPI
     /// </summary>
-    public class EmailService
+    internal class EmailService
     {
         private IConfiguration _configuration;
 
