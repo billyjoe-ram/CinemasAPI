@@ -2,7 +2,7 @@
 
 namespace CinemasAPI.Data.Dtos.Filme
 {
-    public class CreateFilmeDto
+    internal class CreateFilmeDto
     {
         [Required(ErrorMessage = "Título do Filme é obrigatório")]
         [StringLength(128)]

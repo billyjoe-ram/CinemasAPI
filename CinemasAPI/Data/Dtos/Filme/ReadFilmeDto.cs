@@ -2,7 +2,7 @@
 
 namespace CinemasAPI.Data.Dtos.Filme
 {
-    public class ReadFilmeDto
+    internal class ReadFilmeDto
     {
         public int Id { get; set; }
         public string Titulo { get; set; }
