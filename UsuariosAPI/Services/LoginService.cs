@@ -8,7 +8,7 @@ namespace UsuariosAPI.Services
     /// <summary>
     ///     Service para as operações e regras de negócio relacionado ao login.
     /// </summary>
-    public class LoginService
+    internal class LoginService
     {
         private SignInManager<IdentityUser<int>> _signInManager;
         private TokenService _tokenService;
