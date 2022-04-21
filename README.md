@@ -36,13 +36,13 @@ Modelo construído utilizando as ferramentas nativas do MySQL Workbench
 # Futuras Implementações
 - [x] Documentar as classes e métodos;
 - [ ] Tornar métodos assíncronos onde for necessário;
-- [ ] Modificar classes para internas onde for necessário;
+- [x] Modificar classes para internas onde for necessário;
 - [ ] Alterar o banco de dados para que gêneros de filme seja uma entidade à parte com um relacionamento n:n com filmes;
 - [ ] Alterar ids das chaves primárias de inteiros com autoincrement para uuid ou identificações mais aleatórias e únicas;
 - [ ] Utilizar conversão de HTML para o corpo do e-mail e tornar mais visualmente agradável;
 - [ ] Hospedar a API.
 
 # Atualizações
-**Versão 1.1:**
+**Versão 1.2:**
 
-A versão 1.1 contém toda a parte de autenticação e login, com critérios de senha e ativação de conta por e-mail, por parte de uma outro projeto dentro da mesma solução, chamada UsuariosAPI.
+A versão 1.2 contém toda a aplicação sólida, mas com melhorias estruturais de refatoração e documentação.
