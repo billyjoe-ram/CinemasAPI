@@ -4,7 +4,7 @@ using CinemasAPI.Models;
 
 namespace CinemasAPI.Profiles
 {
-    public class SessaoProfile : Profile
+    internal class SessaoProfile : Profile
     {
         public SessaoProfile()
         {

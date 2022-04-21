@@ -4,7 +4,7 @@ using CinemasAPI.Models;
 
 namespace CinemasAPI.Profiles
 {
-    public class GerenteProfile : Profile
+    internal class GerenteProfile : Profile
     {
         public GerenteProfile()
         {
