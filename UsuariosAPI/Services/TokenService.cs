@@ -9,8 +9,17 @@ using System.IdentityModel.Tokens.Jwt;
 
 namespace UsuariosAPI.Services
 {
+    /// <summary>
+    ///     Service para as operações e regras de negócio relacionadas ao token.
+    /// </summary>
     public class TokenService
     {
+        /// <summary>
+        ///     Cria um token para o Identity User informado.
+        /// </summary>
+        /// <param name="usuario">Usuario Identity.</param>
+        /// <param name="role">Roles do usuário identity.</param>
+        /// <returns>Token gerado pelo service.</returns>
         public Token CreateUserToken(IdentityUser<int> usuario, string role)
         {
             Claim[] claimsUsuario = new Claim[]
