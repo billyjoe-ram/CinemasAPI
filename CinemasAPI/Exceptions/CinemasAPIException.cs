@@ -1,6 +1,6 @@
 ﻿namespace CinemasAPI.Exceptions
 {
-    public class CinemasAPIException : Exception
+    internal class CinemasAPIException : Exception
     {
         public CinemasAPIException() : base()
         {
