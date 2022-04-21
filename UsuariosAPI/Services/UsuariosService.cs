@@ -10,6 +10,9 @@ using Microsoft.AspNetCore.Identity;
 
 namespace UsuariosAPI.Services
 {
+    /// <summary>
+    ///     Service para as operações e regras de negócio relacionado ao usuário.
+    /// </summary>
     public class UsuariosService
     {
         private IMapper _mapper;
@@ -17,6 +20,13 @@ namespace UsuariosAPI.Services
         private EmailService _emailService;
         private RoleManager<IdentityRole<int>> _roleManager;
 
+        /// <summary>
+        ///     Inicia uma nova instância da classe <see cref="UsuariosService"/>
+        /// </summary>
+        /// <param name="mapper"></param>
+        /// <param name="userManager"></param>
+        /// <param name="emailService"></param>
+        /// <param name="roleManager"></param>
         public UsuariosService(
             IMapper mapper,
             UserManager<IdentityUser<int>> userManager,
@@ -30,6 +40,11 @@ namespace UsuariosAPI.Services
             _roleManager = roleManager;
         }
 
+        /// <summary>
+        ///     Cadastra um usuário no sistema.
+        /// </summary>
+        /// <param name="usuarioDto">DTO para cadastrar um usuário.</param>
+        /// <returns>Código de confirmação por e-mail.</returns>
         public string CadastrarUsuario(CreateUsuarioDto usuarioDto)
         {
             IdentityUser<int> usuarioIdentity = CriarUsuario(usuarioDto);
@@ -61,7 +76,6 @@ namespace UsuariosAPI.Services
 
             return usuarioIdentity;
         }
-
         private void AdicionarRoles(IdentityUser<int> usuarioIdentity)
         {
             Task<IdentityResult> taskUsuarioRole = _userManager.AddToRoleAsync(usuarioIdentity, "user");
@@ -73,7 +87,6 @@ namespace UsuariosAPI.Services
                 throw new RegisterException($"Erro ao adicionar roles");
             }
         }
-
         private string GerarCodigoConfirmacaoEmail(IdentityUser<int> usuarioIdentity)
         {
             var taskCodigo = _userManager
@@ -88,7 +101,6 @@ namespace UsuariosAPI.Services
 
             return codigoConfirmacao;
         }
-
         private void EnviarEmailConfirmacao(IdentityUser<int> usuarioIdentity, string tokenAtivacao)
         {
             string destinatario = usuarioIdentity.Email;
@@ -101,6 +113,15 @@ namespace UsuariosAPI.Services
             _emailService.EnviarEmail(destinatario, assunto, corpoEmail);
         }
 
+
+        /// <summary>
+        ///     Ativa o usuário.
+        /// </summary>
+        /// <remarks>
+        ///     Utiliza o token ao cadastrar para ativação gerado.
+        /// </remarks>
+        /// <param name="ativaContaRequest">Classe de Request para ativar a conta.</param>
+        /// <exception cref="ActiveAccountByEmailException"></exception>
         public void AtivarUsuario(AtivaContaRequest ativaContaRequest)
         {
             var identityUser = _userManager
@@ -118,6 +139,18 @@ namespace UsuariosAPI.Services
             }
         }
 
+
+        /// <summary>
+        ///     Solicita a redefinição da senha.
+        /// </summary>
+        /// <remarks>
+        ///     Para o usuário enviado, será gerado um Token, necessário para redefinição.
+        /// </remarks>
+        /// <param name="resetSenhaRequest">Classe de Request para solicitar reset de senha.</param>
+        /// <returns>Token de autenticação para reset de senha.</returns>
+        /// <exception cref="Exception">
+        ///     Lançada caso ocorra um erro nas tasks internas.
+        /// </exception>
         public string SolicitarResetSenha(SolicitacaoResetSenhaRequest resetSenhaRequest)
         {
             IdentityUser<int> identityUser = GetUsuarioIdentityPorEmail(resetSenhaRequest.Email);
@@ -140,6 +173,13 @@ namespace UsuariosAPI.Services
             return passwordResetToken;
         }
 
+        /// <summary>
+        ///     Redefine a senha do usuário.
+        /// </summary>
+        /// <param name="request">Classe de Request para redefir senha.</param>
+        /// <exception cref="Exception">
+        ///     Lançada caso ocorra um erro nas tasks internas.
+        /// </exception>
         public void ResetarSenha(ResetSenhaRequest request)
         {
             IdentityUser<int> identityUser = GetUsuarioIdentityPorEmail(request.Email);
