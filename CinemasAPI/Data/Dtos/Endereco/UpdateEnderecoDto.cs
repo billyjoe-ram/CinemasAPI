@@ -2,7 +2,7 @@
 
 namespace CinemasAPI.Data.Dtos.Endereco
 {
-    public class UpdateEnderecoDto
+    internal class UpdateEnderecoDto
     {
         [Required]
         [StringLength(8)]

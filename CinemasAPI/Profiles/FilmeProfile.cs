@@ -6,7 +6,7 @@ using CinemasAPI.Data.Dtos.Filme;
 
 namespace CinemasAPI.Profiles
 {
-    public class FilmeProfile : Profile
+    internal class FilmeProfile : Profile
     {
         public FilmeProfile()
         {

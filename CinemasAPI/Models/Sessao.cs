@@ -2,7 +2,7 @@
 
 namespace CinemasAPI.Models
 {
-    public class Sessao
+    internal class Sessao
     {
         [Key]
         public int Id { get; private set; }

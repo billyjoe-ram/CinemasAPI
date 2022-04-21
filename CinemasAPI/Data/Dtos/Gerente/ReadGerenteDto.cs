@@ -1,6 +1,6 @@
 ﻿namespace CinemasAPI.Data.Dtos.Gerente
 {
-    public class ReadGerenteDto
+    internal class ReadGerenteDto
     {
         public int Id { get; set; }
 

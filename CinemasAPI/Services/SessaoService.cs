@@ -10,7 +10,7 @@ namespace CinemasAPI.Services
     /// <summary>
     ///     Service para as operações e regras de negócio relacionadas a Sessões.
     /// </summary>
-    public class SessaoService
+    internal class SessaoService
     {
         private AppDbContext _context;
         private IMapper _mapper;

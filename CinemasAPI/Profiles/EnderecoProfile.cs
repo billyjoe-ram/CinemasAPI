@@ -5,7 +5,7 @@ using CinemasAPI.Data.Dtos.Endereco;
 
 namespace CinemasAPI.Profiles
 {
-    public class EnderecoProfile : Profile
+    internal class EnderecoProfile : Profile
     {
         public EnderecoProfile()
         {

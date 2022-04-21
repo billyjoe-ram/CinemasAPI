@@ -10,7 +10,7 @@ namespace CinemasAPI.Services
     /// <summary>
     ///     Service para as operações e regras de negócio relacionadas aos cinemas
     /// </summary>
-    public class CinemasService
+    internal class CinemasService
     {
         private AppDbContext _context;
         private IMapper _mapper;

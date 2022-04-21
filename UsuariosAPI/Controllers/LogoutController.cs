@@ -9,7 +9,7 @@ namespace UsuariosAPI.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    public class LogoutController : ControllerBase
+    internal class LogoutController : ControllerBase
     {
         private LogoutService _logoutService;
 
