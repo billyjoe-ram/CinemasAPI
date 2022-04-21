@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace CinemasAPI.Models
 {
-    public class Endereco
+    internal class Endereco
     {
         [Key]
         [Required]
