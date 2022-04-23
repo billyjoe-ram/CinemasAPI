@@ -3,7 +3,7 @@ using CinemasAPI.Models;
 
 namespace CinemasAPI.Data
 {
-    internal class AppDbContext : DbContext
+    public class AppDbContext : DbContext
     {
         public DbSet<Filme> Filmes { get; set; }
 

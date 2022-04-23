@@ -10,7 +10,7 @@ namespace CinemasAPI.Services
     /// <summary>
     ///     Service para as operações e regras de negócio relacionadas aos Enderecos.
     /// </summary>
-    internal class EnderecosService
+    public class EnderecosService
     {
         private AppDbContext _context;
         private IMapper _mapper;

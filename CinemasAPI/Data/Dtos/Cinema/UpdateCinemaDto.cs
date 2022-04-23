@@ -2,7 +2,7 @@
 
 namespace CinemasAPI.Data.Dtos.Cinema
 {
-    internal class UpdateCinemaDto
+    public class UpdateCinemaDto
     {
         [Required(ErrorMessage = "Nome do Cinema é obrigatório")]
         [StringLength(128)]

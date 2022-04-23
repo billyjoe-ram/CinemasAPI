@@ -10,7 +10,7 @@ namespace UsuariosAPI.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    internal class LoginController : ControllerBase
+    public class LoginController : ControllerBase
     {
         private LoginService _loginService;
 

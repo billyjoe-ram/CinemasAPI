@@ -7,7 +7,7 @@ namespace UsuariosAPI.Services
     /// <summary>
     ///     Service para as operações e regras de negócio relacionado ao logout.
     /// </summary>
-    internal class LogoutService
+    public class LogoutService
     {
         private SignInManager<IdentityUser<int>> _signInManager;
         private TokenService _tokenService;

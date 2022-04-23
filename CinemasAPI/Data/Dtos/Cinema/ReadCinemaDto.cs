@@ -1,6 +1,6 @@
 ﻿namespace CinemasAPI.Data.Dtos.Cinema
 {
-    internal class ReadCinemaDto
+    public class ReadCinemaDto
     {
         public int Id { get; set; }
         public string Nome { get; set; }

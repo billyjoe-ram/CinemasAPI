@@ -1,6 +1,6 @@
 ﻿namespace CinemasAPI.Exceptions
 {
-    internal class NotFoundException : CinemasAPIException
+    public class NotFoundException : CinemasAPIException
     {
         public NotFoundException() : base()
         {

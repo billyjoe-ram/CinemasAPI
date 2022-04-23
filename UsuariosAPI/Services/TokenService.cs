@@ -12,7 +12,7 @@ namespace UsuariosAPI.Services
     /// <summary>
     ///     Service para as operações e regras de negócio relacionadas ao token.
     /// </summary>
-    internal class TokenService
+    public class TokenService
     {
         /// <summary>
         ///     Cria um token para o Identity User informado.

@@ -12,7 +12,7 @@ namespace CinemasAPI.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    internal class GerentesController : ControllerBase
+    public class GerentesController : ControllerBase
     {
         private GerentesService _gerentesService;
 

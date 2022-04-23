@@ -13,7 +13,7 @@ namespace UsuariosAPI.Services
     /// <summary>
     ///     Service para as operações e regras de negócio relacionado ao usuário.
     /// </summary>
-    internal class UsuariosService
+    public class UsuariosService
     {
         private IMapper _mapper;
         private UserManager<IdentityUser<int>> _userManager;

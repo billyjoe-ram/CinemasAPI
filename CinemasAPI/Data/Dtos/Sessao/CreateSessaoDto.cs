@@ -2,7 +2,7 @@
 
 namespace CinemasAPI.Data.Dtos.Sessao
 {
-    internal class CreateSessaoDto
+    public class CreateSessaoDto
     {
         [Required]
         public int FilmeId { get; set; }

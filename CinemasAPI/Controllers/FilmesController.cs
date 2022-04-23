@@ -12,7 +12,7 @@ namespace CinemasAPI.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    internal class FilmesController : ControllerBase
+    public class FilmesController : ControllerBase
     {
         private FilmesService _filmesService;
 

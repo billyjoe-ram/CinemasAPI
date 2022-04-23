@@ -2,7 +2,7 @@
 
 namespace CinemasAPI.Data.Dtos.Gerente
 {
-    internal class CreateGerenteDto
+    public class CreateGerenteDto
     {
         [Required(ErrorMessage = "Nome do Gerente é obrigatório")]
         [StringLength(64)]

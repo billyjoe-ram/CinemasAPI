@@ -2,7 +2,7 @@
 
 namespace CinemasAPI.Data.Dtos.Endereco
 {
-    internal class ReadEnderecoDto
+    public class ReadEnderecoDto
     {
         [Key]
         [Required]

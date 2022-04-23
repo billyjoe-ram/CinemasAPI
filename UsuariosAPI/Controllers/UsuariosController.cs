@@ -11,7 +11,7 @@ namespace UsuariosAPI.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    internal class UsuariosController : ControllerBase
+    public class UsuariosController : ControllerBase
     {
         private UsuariosService _usuariosService;
 

@@ -3,7 +3,7 @@ using System.Text.Json.Serialization;
 
 namespace CinemasAPI.Models
 {
-    internal class Gerente
+    public class Gerente
     {
         [Key]
         [Required]

@@ -2,7 +2,7 @@
 
 namespace CinemasAPI.Data.Dtos.Sessao
 {
-    internal class ReadSessaoDto
+    public class ReadSessaoDto
     {
         [Key]
         public int Id { get; set; }

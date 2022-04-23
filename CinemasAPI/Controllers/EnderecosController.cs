@@ -13,7 +13,7 @@ namespace CinemasAPI.Controllers
     /// </summary>
     [ApiController]
     [Route("[controller]")]
-    internal class EnderecosController : ControllerBase
+    public class EnderecosController : ControllerBase
     {
         private EnderecosService _enderecosService;
 
