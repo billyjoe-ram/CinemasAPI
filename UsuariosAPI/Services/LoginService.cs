@@ -32,7 +32,7 @@ namespace UsuariosAPI.Services
         /// <exception cref="SignInException">
         ///     Lançada quando não é possível realizar o login.
         /// </exception>
-        public string LogarUsuario(LoginRequest request)
+        public async Task<string> LogarUsuario(LoginRequest request)
         {           
             var identityUser = _signInManager
                 .UserManager
@@ -45,14 +45,15 @@ namespace UsuariosAPI.Services
                 throw new SignInException("Confirme seu e-mail para logar");
             }
 
-            var resultadoIdentity = _signInManager.PasswordSignInAsync(request.Username, request.Senha, true, false);
+            var resultadoIdentity = await _signInManager.PasswordSignInAsync(request.Username, request.Senha, true, false);
 
-            if (!resultadoIdentity.Result.Succeeded)
+            if (!resultadoIdentity.Succeeded)
             {
                 throw new SignInException("Não foi possível realizar o login.");
             }
 
-            var rolesUsuario = _signInManager.UserManager.GetRolesAsync(identityUser).Result.First();
+            var rolesUsuario = (await _signInManager.UserManager.GetRolesAsync(identityUser))
+                .First();
 
             var token = _tokenService.CreateUserToken(
                 identityUser,
