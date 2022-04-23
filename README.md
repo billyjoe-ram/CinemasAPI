@@ -36,13 +36,12 @@ Modelo construído utilizando as ferramentas nativas do MySQL Workbench
 # Futuras Implementações
 - [x] Documentar as classes e métodos;
 - [ ] Tornar métodos assíncronos onde for necessário;
-- [x] Modificar classes para internas onde for necessário;
 - [ ] Alterar o banco de dados para que gêneros de filme seja uma entidade à parte com um relacionamento n:n com filmes;
 - [ ] Alterar ids das chaves primárias de inteiros com autoincrement para uuid ou identificações mais aleatórias e únicas;
 - [ ] Utilizar conversão de HTML para o corpo do e-mail e tornar mais visualmente agradável;
 - [ ] Hospedar a API.
 
 # Atualizações
-**Versão 1.2:**
+**Versão 1.2.1:**
 
-A versão 1.2 contém toda a aplicação sólida, mas com melhorias estruturais de refatoração e documentação.
+A versão 1.2.1 reverte os modificadores de acesso para public, já que quando ficam como internal, o Entity não consegue montar os endpoints.
