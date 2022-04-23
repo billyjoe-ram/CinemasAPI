@@ -29,13 +29,13 @@ namespace UsuariosAPI.Controllers
         /// <param name="request">Classe de Request para efetuar o login.</param>
         /// <returns>Resultado da ação realizada.</returns>
         [HttpPost]
-        public IActionResult LogarUsuario(LoginRequest request)
+        public async Task<IActionResult> LogarUsuario(LoginRequest request)
         {
             string tokenLogin;
 
             try
             {
-                tokenLogin = _loginService.LogarUsuario(request);
+                tokenLogin = await _loginService.LogarUsuario(request);
             }
             catch (Exception e)
             {

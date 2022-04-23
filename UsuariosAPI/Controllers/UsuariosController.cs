@@ -30,12 +30,12 @@ namespace UsuariosAPI.Controllers
         /// <param name="usuarioDto">Classe de Request para cadastrar o usuário.</param>
         /// <returns>Resultado da ação realizada.</returns>
         [HttpPost]
-        public IActionResult CadastrarUsuario(CreateUsuarioDto usuarioDto)
+        public async Task<IActionResult> CadastrarUsuario(CreateUsuarioDto usuarioDto)
         {
             string codigoAtivacao;
             try
             {
-                codigoAtivacao = _usuariosService.CadastrarUsuario(usuarioDto);
+                codigoAtivacao = await _usuariosService.CadastrarUsuario(usuarioDto);
             }
             catch (Exception e)
             {
@@ -78,13 +78,13 @@ namespace UsuariosAPI.Controllers
         /// <returns>Resultado da ação realizada.</returns>
         [HttpPost]
         [Route("/[controller]/solicitar-reset-senha")]
-        public IActionResult SolicitarResetSenha([FromBody] SolicitacaoResetSenhaRequest request)
+        public async Task<IActionResult> SolicitarResetSenha([FromBody] SolicitacaoResetSenhaRequest request)
         {
             string tokenResetSenha;
 
             try
             {
-                tokenResetSenha = _usuariosService.SolicitarResetSenha(request);
+                tokenResetSenha = await _usuariosService.SolicitarResetSenha(request);
             }
             catch (Exception e)
             {
@@ -101,11 +101,11 @@ namespace UsuariosAPI.Controllers
         /// <returns>Resultado da ação realizada.</returns>
         [HttpPost]
         [Route("/[controller]/reset-senha")]
-        public IActionResult ResetarSenha([FromBody] ResetSenhaRequest request)
+        public async Task<IActionResult> ResetarSenha([FromBody] ResetSenhaRequest request)
         {
             try
             {
-                _usuariosService.ResetarSenha(request);
+               await _usuariosService.ResetarSenha(request);
             }
             catch (Exception e)
             {

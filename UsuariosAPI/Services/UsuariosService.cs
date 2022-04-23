@@ -45,13 +45,13 @@ namespace UsuariosAPI.Services
         /// </summary>
         /// <param name="usuarioDto">DTO para cadastrar um usuário.</param>
         /// <returns>Código de confirmação por e-mail.</returns>
-        public string CadastrarUsuario(CreateUsuarioDto usuarioDto)
+        public async Task<string> CadastrarUsuario(CreateUsuarioDto usuarioDto)
         {
-            IdentityUser<int> usuarioIdentity = CriarUsuario(usuarioDto);
+            IdentityUser<int> usuarioIdentity = await CriarUsuario(usuarioDto);
 
-            AdicionarRoles(usuarioIdentity);
+            await AdicionarRoles(usuarioIdentity);
 
-            string codigoConfirmacaoEmail = GerarCodigoConfirmacaoEmail(usuarioIdentity);
+            string codigoConfirmacaoEmail = await GerarCodigoConfirmacaoEmail(usuarioIdentity);
             var encodedCodigoConfirmacao = HttpUtility.UrlEncode(codigoConfirmacaoEmail);
 
             EnviarEmailConfirmacao(usuarioIdentity, encodedCodigoConfirmacao);
@@ -59,44 +59,46 @@ namespace UsuariosAPI.Services
             return codigoConfirmacaoEmail;
         }
 
-        private IdentityUser<int> CriarUsuario(CreateUsuarioDto usuarioDto)
+        private async Task<IdentityUser<int>> CriarUsuario(CreateUsuarioDto usuarioDto)
         {
             Usuario usuario = _mapper.Map<Usuario>(usuarioDto);
             IdentityUser<int> usuarioIdentity = _mapper.Map<IdentityUser<int>>(usuario);
 
-            Task<IdentityResult> resultadoIdentity = _userManager
+            IdentityResult resultadoIdentity = await _userManager
                 .CreateAsync(usuarioIdentity, usuarioDto.Senha);
 
-            if (!resultadoIdentity.Result.Succeeded)
+            if (!resultadoIdentity.Succeeded)
             {
-                List<string> erros = resultadoIdentity.Result.Errors.Select(e => e.Description).ToList();
+                List<string> erros = resultadoIdentity.Errors.Select(e => e.Description).ToList();
                 string mensagemDeErro = String.Join("\n", erros);
                 throw new RegisterException($"Erro ao cadastrar usuário:\n{mensagemDeErro}");
             }
 
             return usuarioIdentity;
         }
-        private void AdicionarRoles(IdentityUser<int> usuarioIdentity)
+        private async Task<bool> AdicionarRoles(IdentityUser<int> usuarioIdentity)
         {
-            Task<IdentityResult> taskUsuarioRole = _userManager.AddToRoleAsync(usuarioIdentity, "user");
+            IdentityResult taskUsuarioRole = await _userManager.AddToRoleAsync(usuarioIdentity, "user");
 
-            IdentityResult identityResult = taskUsuarioRole.Result;
-
-            if (taskUsuarioRole.IsCompleted && !taskUsuarioRole.IsCompletedSuccessfully)
+            if (!taskUsuarioRole.Succeeded)
             {
                 throw new RegisterException($"Erro ao adicionar roles");
             }
+
+            return taskUsuarioRole.Succeeded;
         }
-        private string GerarCodigoConfirmacaoEmail(IdentityUser<int> usuarioIdentity)
+        private async Task<string> GerarCodigoConfirmacaoEmail(IdentityUser<int> usuarioIdentity)
         {
-            var taskCodigo = _userManager
-                .GenerateEmailConfirmationTokenAsync(usuarioIdentity);
+            string codigoConfirmacao;
 
-            string codigoConfirmacao = taskCodigo.Result;
-
-            if (taskCodigo.IsCompleted && !taskCodigo.IsCompletedSuccessfully)
+            try
             {
-                throw new RegisterException($"Erro ao gerar código de Confirmação Por E-mail");
+                codigoConfirmacao = await _userManager
+                    .GenerateEmailConfirmationTokenAsync(usuarioIdentity);
+            }
+            catch (Exception)
+            {
+                throw new RegisterException($"Erro ao gerar código de Confirmação Por E-mail"); ;
             }
 
             return codigoConfirmacao;
@@ -122,21 +124,23 @@ namespace UsuariosAPI.Services
         /// </remarks>
         /// <param name="ativaContaRequest">Classe de Request para ativar a conta.</param>
         /// <exception cref="ActiveAccountByEmailException"></exception>
-        public void AtivarUsuario(AtivaContaRequest ativaContaRequest)
+        public async Task<bool> AtivarUsuario(AtivaContaRequest ativaContaRequest)
         {
             var identityUser = _userManager
                 .Users
                 .First(u => u.Id == ativaContaRequest.UsuarioId);
 
-            var identityResult = _userManager
+            var identityResult = await _userManager
                 .ConfirmEmailAsync(identityUser, ativaContaRequest.CodigoAtivacao);
 
-            if (!identityResult.Result.Succeeded)
+            if (!identityResult.Succeeded)
             {
-                List<string> erros = identityResult.Result.Errors.Select(e => e.Description).ToList();
+                List<string> erros = identityResult.Errors.Select(e => e.Description).ToList();
                 string mensagemDeErro = String.Join("\n", erros);
                 throw new ActiveAccountByEmailException($"Erro ao ativar conta: {mensagemDeErro}");
             }
+
+            return identityResult.Succeeded;
         }
 
 
@@ -151,24 +155,20 @@ namespace UsuariosAPI.Services
         /// <exception cref="Exception">
         ///     Lançada caso ocorra um erro nas tasks internas.
         /// </exception>
-        public string SolicitarResetSenha(SolicitacaoResetSenhaRequest resetSenhaRequest)
+        public async Task<string> SolicitarResetSenha(SolicitacaoResetSenhaRequest resetSenhaRequest)
         {
+            string passwordResetToken;
             IdentityUser<int> identityUser = GetUsuarioIdentityPorEmail(resetSenhaRequest.Email);
 
-            Task<string> passwordResetTokenTask = _userManager.GeneratePasswordResetTokenAsync(identityUser);
-
-            if (!passwordResetTokenTask.IsCompletedSuccessfully)
+            try
             {
-                string mensagemExcecao = "Ocorreu um erro ao solicitar redefinição de senha";
-
-                if (passwordResetTokenTask.Exception != null)
-                {
-                    mensagemExcecao = passwordResetTokenTask.Exception.Message;
-                }
-                throw new Exception(mensagemExcecao);
+                passwordResetToken = await _userManager
+                    .GeneratePasswordResetTokenAsync(identityUser);
             }
-
-            string passwordResetToken = passwordResetTokenTask.Result;
+            catch (Exception)
+            {
+                throw new Exception("Ocorreu um erro ao solicitar redefinição de senha");
+            }
 
             return passwordResetToken;
         }
@@ -180,16 +180,18 @@ namespace UsuariosAPI.Services
         /// <exception cref="Exception">
         ///     Lançada caso ocorra um erro nas tasks internas.
         /// </exception>
-        public void ResetarSenha(ResetSenhaRequest request)
+        public async Task<bool> ResetarSenha(ResetSenhaRequest request)
         {
             IdentityUser<int> identityUser = GetUsuarioIdentityPorEmail(request.Email);
 
-            var identityResult = _userManager.ResetPasswordAsync(identityUser, request.ResetSenhaToken, request.ConfirmaSenha).Result;
+            var identityResult = await _userManager.ResetPasswordAsync(identityUser, request.ResetSenhaToken, request.ConfirmaSenha);
 
             if (!identityResult.Succeeded)
             {
                 throw new Exception($"Não foi possível redefinir a senha");
             }
+
+            return identityResult.Succeeded;
         }
 
         private IdentityUser<int> GetUsuarioIdentityPorEmail(string email)
